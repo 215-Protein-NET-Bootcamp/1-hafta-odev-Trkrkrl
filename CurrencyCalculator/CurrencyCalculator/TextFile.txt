@@ -1,0 +1,24 @@
+﻿Currency Calculator Api
+
+Asamalar
+
+Destek alacağımız API - https://apilayer.com/marketplace/exchangerates_data-api?e=Sign+In&l=Success
+
+Birçok özelliği mevcut
+bize lazım olanlar
+	getall currencies- mevcut tüm para birimlerinin kısatmaları ve açıklamalarını veriyor
+	convert çeviriyor-(miktar-girdi birimi kodu-çıktıbirimi kodu ve date istiyor)
+
+-
+Benim projem de bu 3 özellik ile bağlantı sağlamalı ve oradan veri çekebilmeli
+date i otomatik olarak göndermeli
+
+Client swaggerden bu bilgileiri get ile istese -->burdan geleni api servisine göndersem--->onun verdiği cevabı da kendi apimdeki clienta cevap olarak dönsem
+
+Bir nesne oluştumam lazım-ki bu bilgileri atayayım-girdi ve cikti birimleri- miktar ve tarih
+girdi  ve cikti nesneleerimiz olsun- bunlara da - tarih harici 3 prop tanimlayalim
+
+Once benim apimden nasil girdi alacagim
+
+	bir get olacak bu
+		bu get e 3 deger yazacak
