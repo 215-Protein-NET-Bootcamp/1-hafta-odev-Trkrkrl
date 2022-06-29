@@ -22,3 +22,4 @@ Once benim apimden nasil girdi alacagim
 
 	bir get olacak bu
 		bu get e 3 deger yazacak
+"CurrencyCalculator:ServiceApiKey" "0voPcVVVFrHYEI4qhECMzQqui4WWW6Qm"

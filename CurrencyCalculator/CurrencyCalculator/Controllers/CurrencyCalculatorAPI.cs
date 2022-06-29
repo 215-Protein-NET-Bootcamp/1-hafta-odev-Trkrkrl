@@ -1,10 +1,14 @@
-﻿using CurrencyCalculator.Business;
+﻿
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace CurrencyCalculator.Controllers
@@ -30,37 +34,51 @@ namespace CurrencyCalculator.Controllers
         public int Miktar { get; set; }
         public string GirdiBirimi { get; set; }
         public string CiktiBirimi { get; set; }
+        public double Sonuc { get; set; }
     }
 
 
     public class CurrencyCalculatorAPI : Controller
     {
-        /* ICalculationService _calculationService;
+        private readonly IConfiguration _configuration;//api için lazım- bunu ctorla
 
+        public CurrencyCalculatorAPI(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        //-
+        public class Query//json to c# sitesinden  cevirdik bunu- hangisi olduğunu deserializeda anlasın diye
+        {
+            [JsonPropertyName("amount")]
+            public int Amount { get; set; }
 
-         [HttpGet]
-         public IActionResult GetBySpecs(int miktar,string girdiBirimi,string ciktiBirimi)
-         {
+            [JsonPropertyName("from")]
+            public string From { get; set; }
 
-             var result = _calculationService.GetBySpecs(miktar, girdiBirimi, ciktiBirimi);
-             if (result.Success)
-             {
-                 return Ok(result);
+            [JsonPropertyName("to")]
+            public string To { get; set; }
+        }
 
-             }
-             return BadRequest(result);
-         }
+        public class Root
+        {
+            [JsonPropertyName("query")]
+            public Query Query { get; set; }
 
+            [JsonPropertyName("result")]
+            public double Result { get; set; }
 
-         */
+            [JsonPropertyName("success")]
+            public bool Success { get; set; }
+        }
 
-        //direkt gelir mi acaba-----------------
-        [HttpGet]
+        //-
+
+        [HttpGet("GetBySpecs")]
+        
 
         public async Task<IActionResult> GetBySpecs(int miktar, string girdiBirimi, string ciktiBirimi)
         {
-
-            //bu ozelliklere sahip bir girdi
+                                
             Girdi girdi = new Girdi()
             {
                 Miktar = miktar,
@@ -68,33 +86,56 @@ namespace CurrencyCalculator.Controllers
                 CiktiBirimi = ciktiBirimi
             };
 
-            //var adresYolu = "https://api.apilayer.com/exchangerates_data/convert?to=" + $"{ciktiBirimi}" + "&from=" + $"{girdiBirimi}" + "&amount=" + $"{miktar}";
-            var adresYolu = "https://api.apilayer.com/exchangerates_data/convert?to={ciktiBirimi}&from={girdiBirimi}&amount={miktar}";
-
+            var adresYolu = "https://api.apilayer.com/exchangerates_data/convert?to=" + $"{ciktiBirimi}" + "&from=" + $"{girdiBirimi}" + "&amount=" + $"{miktar}";
+            //var adresYolu = "https://api.apilayer.com/exchangerates_data/convert?to={ciktiBirimi}&from={girdiBirimi}&amount={miktar}";-bu çalışmadı
             var client = new RestClient(adresYolu);
 
-            // client.Timeout = -1;
+             client.Timeout = -1; 
 
 
-            var request = new RestRequest(Method.Get);
+            var request = new RestRequest(Method.GET);
 
-            request.AddHeader("apikey", "voPcVVVFrHYEI4qhECMzQqui4WWW6Qm");// api  keyi environmete atmalısın
+            var apiKey = _configuration.GetValue<string>("API_KEY");   //configuration paketi yukledim
+
+            request.AddHeader("apikey", apiKey);// api  keyi environmete atmalısın
 
             IRestResponse response = await client.ExecuteAsync(request);//burasını çözmek için restsharpın 106.15 versiyonu çalıyor sadece
 
+            Console.WriteLine(response.Content);
+            
+            
+                var donus = JsonConvert.DeserializeObject<Root>(response.Content);//newtonsoft json gerekli-<> içerisine query yazınca olmuyor-root yaz asagida o kökten ilerle
+           
+
+                var sonuc = JsonConvert.DeserializeObject<Root>(response.Content);//toplam para tutari ve issuccesful veriyor
 
 
-            Cikti cikti = new Cikti()
+           
+            if (sonuc.Success)
             {
-                Miktar = response.
-                GirdiBirimi = response.query.to,
-                CiktiBirimi = response.query.from
+                Cikti cikti = new Cikti()
+                {
+                    Miktar = donus.Query.Amount,
+                    GirdiBirimi = donus.Query.From,
+                    CiktiBirimi = donus.Query.To,
+                    Sonuc = sonuc.Result//ok bunu alıyoz
 
-            };
+                };
+                return Ok(cikti);
 
-            return cikti;
+            }
+            else 
+                return BadRequest("GİRDİĞİNİZ  BİLGİLERİ KONTROL EDİNİZ");//ok-apiye rastgele hatalı veri girince bu fon çalışıyot
 
-            //Console.WriteLine(response.Content);//APi den geleni cikti nin proplarina esitleyip atayacagim
+
+
+
+            //--- LATEST METHODU İLE  TO ya birden çok para birimi atayarak bir çözüm vereceğiz
+
+
+
+
+
         }
 
 
