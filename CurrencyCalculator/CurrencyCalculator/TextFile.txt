@@ -22,4 +22,42 @@ Once benim apimden nasil girdi alacagim
 
 	bir get olacak bu
 		bu get e 3 deger yazacak
-"CurrencyCalculator:ServiceApiKey" "0voPcVVVFrHYEI4qhECMzQqui4WWW6Qm"
+
+		apikey i gizlemek için appsettings.json u kullandım
+		controller girişine private raedonly _controller dedim
+		bunu ctorladım
+		var apiKey = _configuration.GetValue<string>("API_KEY");
+		dedim
+		bunu da apikeyin gerektiği yere yazdım
+
+		query ve root dönüşümleri için json2c# sitesini kulllandım
+----
+
+2.method yani çoklu çıktı türü yazılacak method
+
+burada veri girilirken birden cok cikti birimi yazilacak
+bunu sağlayan latest apisi- symbols ve cikti birimini istiyor
+symbols- yazdığımız  birimleri belirli bir formatta bir araya getiriyor
+string halinde girebilir
+girenin belirli bir kuralı olmalı
+bu kurala göre
+external apiye göndereceğimiz symbols şekline sokmalıyız
+
+gelen cikti birimler değişknindeki virgülleri %2C ile değiştirmeyi yaptım-
+
+peki bunu externale gönderdik -
+external ne dönüyor- json
+	bu jsonda base- i alıcaz- girdi birimini gösteriyo
+			  rates i alacaz burada da cikti lar ve bunların degerleri
+
+root özelliklerine 2. apinin yapısı gereği base ve IDictionary<string, double> Rates ekledik
+birden fazla cikti olacak- bunlari list ile dondum-
+foreach dedim- her bir dongusunde IDictionaryden aldığı - key ve value yi kullandım
+//
+3.de
+	apikeyi tanımladım,
+	root'a symbols dictionary ekledim
+
+		
+
+

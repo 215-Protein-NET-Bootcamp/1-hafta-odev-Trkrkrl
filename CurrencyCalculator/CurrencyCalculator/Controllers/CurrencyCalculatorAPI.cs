@@ -13,16 +13,6 @@ using System.Threading.Tasks;
 
 namespace CurrencyCalculator.Controllers
 {
-
-
-    public class Doviz
-    {
-        public int Miktar { get; set; }
-        public string GirdiBirimi { get; set; }
-        public string CiktiBirimi { get; set; }
-        public DateTime Date { get; set; }
-
-    }
     public class Girdi
     {
         public int Miktar { get; set; }
@@ -58,8 +48,8 @@ namespace CurrencyCalculator.Controllers
             [JsonPropertyName("to")]
             public string To { get; set; }
         }
-
-        public class Root
+       
+        public class Root1
         {
             [JsonPropertyName("query")]
             public Query Query { get; set; }
@@ -69,14 +59,24 @@ namespace CurrencyCalculator.Controllers
 
             [JsonPropertyName("success")]
             public bool Success { get; set; }
+            //-
+            [JsonPropertyName("base")]
+            public string Base { get; set; }
+            [JsonPropertyName("rates")]
+            public IDictionary<string, double> Rates { get; set; }
+            //-
+
+            [JsonPropertyName("symbols")]
+            public IDictionary<string, string> Symbols { get; set; }
+
         }
 
         //-
 
-        [HttpGet("GetBySpecs")]
+        [HttpGet("SingleCurrency")]
         
 
-        public async Task<IActionResult> GetBySpecs(int miktar, string girdiBirimi, string ciktiBirimi)
+        public async Task<IActionResult> GetBySpecs([FromQuery]int miktar, string girdiBirimi, string ciktiBirimi)
         {
                                 
             Girdi girdi = new Girdi()
@@ -101,14 +101,15 @@ namespace CurrencyCalculator.Controllers
 
             IRestResponse response = await client.ExecuteAsync(request);//burasını çözmek için restsharpın 106.15 versiyonu çalıyor sadece
 
-            Console.WriteLine(response.Content);
             
             
-                var donus = JsonConvert.DeserializeObject<Root>(response.Content);//newtonsoft json gerekli-<> içerisine query yazınca olmuyor-root yaz asagida o kökten ilerle
+            
+                var donus = JsonConvert.DeserializeObject<Root1>(response.Content);//newtonsoft json gerekli-<> içerisine query yazınca olmuyor-root yaz asagida o kökten ilerle
            
 
-                var sonuc = JsonConvert.DeserializeObject<Root>(response.Content);//toplam para tutari ve issuccesful veriyor
-
+                var sonuc = JsonConvert.DeserializeObject<Root1>(response.Content);//toplam para tutari ve issuccesful veriyor
+                
+                 
 
            
             if (sonuc.Success)
@@ -117,8 +118,9 @@ namespace CurrencyCalculator.Controllers
                 {
                     Miktar = donus.Query.Amount,
                     GirdiBirimi = donus.Query.From,
+                        
                     CiktiBirimi = donus.Query.To,
-                    Sonuc = sonuc.Result//ok bunu alıyoz
+                    Sonuc = sonuc.Result//buralari donus olarak duzelt
 
                 };
                 return Ok(cikti);
@@ -139,6 +141,84 @@ namespace CurrencyCalculator.Controllers
         }
 
 
+        [HttpGet("MultipleCurrencies")]
+        public async Task<IActionResult> GetLatest(string ciktiBirimleri, string girdiBirimi)
+        {
+            string symbols = ciktiBirimleri.Replace(@",", "%2C");
+            
+            var adresYolu = "https://api.apilayer.com/exchangerates_data/latest?symbols=" + $"{symbols}" + "&base=" + $"{girdiBirimi}";
+            var client = new RestClient(adresYolu);
+
+           
+
+            client.Timeout = -1;
+
+            var request = new RestRequest(Method.GET);
+
+            var apiKey = _configuration.GetValue<string>("API_KEY");
+
+            request.AddHeader("apikey", apiKey);
+          
+
+            IRestResponse response = client.Execute(request);
+            
+            var donus = JsonConvert.DeserializeObject<Root1>(response.Content);
+         
+
+            if (donus.Success)
+            {
+                List<Cikti> list= new List<Cikti>();
+
+                foreach (var currency in donus.Rates)
+                {
+                    Cikti cikti = new Cikti()
+                    {
+                        Miktar = 1,
+                        GirdiBirimi =girdiBirimi ,
+
+                        CiktiBirimi = currency.Key,
+                        Sonuc = currency.Value
+
+                    };
+                    list.Add(cikti);
+
+                }
+                return Ok(list);
+                
+                
+            }
+            else
+                return BadRequest("GİRDİĞİNİZ  BİLGİLERİ KONTROL EDİNİZ");
+
+        }
+        //--
+        [HttpGet("AvailableCurrencies")]
+        public async Task<IActionResult> GetAvailables()
+        {
+            var client = new RestClient("https://api.apilayer.com/exchangerates_data/symbols");
+            client.Timeout = -1;
+
+            var request = new RestRequest(Method.GET);
+
+            var apiKey = _configuration.GetValue<string>("API_KEY");
+            request.AddHeader("apikey", apiKey);
+
+            IRestResponse response = client.Execute(request);
+
+
+
+            var donus = JsonConvert.DeserializeObject<Root1>(response.Content);
+
+
+            if (donus.Success)
+            {
+                return Ok(donus.Symbols);
+            }
+            else return BadRequest("Hatamız varsa affola");
+        }
+
+
     }
+    
 }
 
