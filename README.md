@@ -45,7 +45,19 @@ Girdi biriminin cikti birimlerindeki karsiliklari verilir.
 <br/>
 
 ####  Kullanilan arac ve eklentiler
+
+<br/>
+
 RestSharp (son surum sikinti cikariyor bir alt surum kullaniniz)
+
+<br/>
+
 NewtonsoftJson
+
+<br/>
+
 Microsoft.Extensions.Configuration - appsettings'teki Api bilgilerine erisimde kullanildi.
+
+<br/>
+
 Json2csharp  sitesi external apiden gelen formati tagleyerek .net'e uygun hale getirdi.
