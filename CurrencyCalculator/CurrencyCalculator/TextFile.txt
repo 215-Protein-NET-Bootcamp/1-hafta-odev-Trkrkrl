@@ -33,7 +33,7 @@ Once benim apimden nasil girdi alacagim
 		query ve root dönüşümleri için json2c# sitesini kulllandım
 ----
 
-2.method yani çoklu çıktı türü yazılacak method
+2.method yani çoklu çıktı türü yazılacak method- NOT. amacına ters calisiyor-external api kaynakli- 1try'nin diğer parabirimi karşılıklarını görebiliyoruz
 
 burada veri girilirken birden cok cikti birimi yazilacak
 bunu sağlayan latest apisi- symbols ve cikti birimini istiyor
