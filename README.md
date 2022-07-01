@@ -40,7 +40,7 @@ Girdi biriminin cikti birimlerindeki karsiliklari verilir.
 ####  3. ozellik: Mevcut Butun parabirimlerini gosterir : Get/AvailableCurrencies
 <br/>
 
-<img src="https://github.com/215-Protein-NET-Bootcamp/1-hafta-odev-Trkrkrl/blob/main/CurrencyCalculator/CurrencyCalculator/Images/3.%C3%B6zellik.pngg?raw=true"/>
+<img src="https://github.com/215-Protein-NET-Bootcamp/1-hafta-odev-Trkrkrl/blob/main/CurrencyCalculator/CurrencyCalculator/Images/3.%C3%B6zellik.png?raw=true"/>
 
 <br/>
 
