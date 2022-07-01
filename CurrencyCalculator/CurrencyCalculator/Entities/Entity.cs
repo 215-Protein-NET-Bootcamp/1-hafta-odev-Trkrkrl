@@ -6,7 +6,7 @@ namespace CurrencyCalculator.Entities
     public class Entity
     {
         //-
-        public class Query//json to c# sitesinden  cevirdik bunu- hangisi olduğunu deserializeda anlasın diye
+        public class Query
         {
             [JsonPropertyName("amount")]
             public int Amount { get; set; }

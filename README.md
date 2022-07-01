@@ -6,11 +6,32 @@
 
 Doviz Kuru Hesaplama API
 Bu API  parabimi kodlari ile calismaktadir.
-1. ozellik: Tek Para Birimi  (1to1) ceviri: Get/SingleCurrency
+####1. ozellik: Tek Para Birimi  (1to1) ceviri: Get/SingleCurrency
 
 Girilen para Biriminin (girdiBirimi) ciktiParabirimi'ndeki karsiligi gosterilmektedir.
-#### Car Detail Page
-<img src="https://github.com/Trkrkrl/215-Protein-NET-Bootcamp/1-hafta-odev-Trkrkrl/blob/master/Images/1.ozellik.png?raw=true"/>
+
+<img src="https://github.com/215-Protein-NET-Bootcamp/1-hafta-odev-Trkrkrl/blob/main/CurrencyCalculator/CurrencyCalculator/Images/1.ozellik.png?raw=true"/>
+
+Hata Kontrolu
+<img src="https://github.com/215-Protein-NET-Bootcamp/1-hafta-odev-Trkrkrl/blob/main/CurrencyCalculator/CurrencyCalculator/Images/1.ozellik-hata-kontrol.png?raw=true"/>
+
+####2. ozellik: Tek Para Birimi  (1 to many  ) ceviri: Get/MultipleCurrency
+Girdi biriminin cikti birimlerindeki karsiliklari verilir.
+<img src="https://github.com/215-Protein-NET-Bootcamp/1-hafta-odev-Trkrkrl/blob/main/CurrencyCalculator/CurrencyCalculator/Images/2.ozeliik.png?raw=true"/>
+
+2.ozellik hata kontrolu
+<img src="https://github.com/215-Protein-NET-Bootcamp/1-hafta-odev-Trkrkrl/blob/main/CurrencyCalculator/CurrencyCalculator/Images/2.ozellik-hata-kontrol.png?raw=true"/>
+
+
+####3. ozellik: Mevcut Butun parabirimlerini gosterir : Get/AvailableCurrencies
+
+
+https://github.com/215-Protein-NET-Bootcamp/1-hafta-odev-Trkrkrl/blob/main/CurrencyCalculator/CurrencyCalculator/Images/3.%C3%B6zellik.png
 
 
 
+####Kullanilan arac ve eklentiler
+RestSharp (son surum sikinti cikariyor bir alt surum kullaniniz)
+NewtonsoftJson
+Microsoft.Extensions.Configuration - appsettings'teki Api bilgilerine erisimde kullanildi.
+Json2csharp  sitesi external apiden gelen formati tagleyerek .net'e uygun hale getirdi.

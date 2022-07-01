@@ -19,16 +19,13 @@ namespace CurrencyCalculator.Controllers
 
     public class CurrencyCalculatorAPI : Controller
     {
-        private readonly IConfiguration _configuration;//api için lazım- bunu ctorla
+        private readonly IConfiguration _configuration;
 
         public CurrencyCalculatorAPI(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-        //-
         
-
-        //-
 
         [HttpGet("SingleCurrency")]
         
